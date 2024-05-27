@@ -9,6 +9,16 @@
             "projectName": "roteiro01",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Roteiro01Application<roteiro01>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.labdessoft.Roteiro01Application",
+            "projectName": "roteiro01",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
