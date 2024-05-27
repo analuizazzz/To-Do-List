@@ -1,0 +1,35 @@
+@startuml
+
+participant "Web Browser" as Browser
+participant TaskController
+participant TaskService
+participant TaskRepository
+participant "Database" as DB
+
+Browser -> TaskController: GET /tasks/
+activate TaskController
+TaskController -> TaskService: listAllTasks()
+activate TaskService
+TaskService -> TaskRepository: findAll()
+activate TaskRepository
+TaskRepository --> TaskService: List<Task>
+deactivate TaskRepository
+TaskService --> TaskController: List<Task>
+deactivate TaskService
+TaskController --> Browser: List<Task>
+deactivate TaskController
+
+Browser -> TaskController: GET /tasks/1
+activate TaskController
+TaskController -> TaskService: getTaskById(1)
+activate TaskService
+TaskService -> TaskRepository: findById(1)
+activate TaskRepository
+TaskRepository --> TaskService: Optional<Task>
+deactivate TaskRepository
+TaskService --> TaskController: Optional<Task>
+deactivate TaskService
+TaskController --> Browser: Task
+deactivate TaskController
+
+@enduml
