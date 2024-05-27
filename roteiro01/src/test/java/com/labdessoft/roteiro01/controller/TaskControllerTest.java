@@ -7,24 +7,17 @@ import com.labdessoft.roteiro01.service.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,29 +48,33 @@ public class TaskControllerTest {
         taskList = Arrays.asList(task1, task2);
     }
 
-  @Test
+    @Test
     @DisplayName("Should return all tasks")
     public void should_return_all_tasks() throws Exception {
-        Page<Task> taskPage = new PageImpl<>(taskList);
-        when(taskService.listAll(any())).thenReturn(taskPage);
+        when(taskService.listAllTasks()).thenReturn(taskList);
 
-        mockMvc.perform(get("/tasks"))
+        mockMvc.perform(get("/tasks")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(taskList.size()));
+                .andExpect(jsonPath("$.size()").value(taskList.size()))
+                .andExpect(jsonPath("$[0].id").value(task1.getId()))
+                .andExpect(jsonPath("$[1].id").value(task2.getId()));
 
-        verify(taskService, times(1)).listAll(any());
+        verify(taskService, times(1)).listAllTasks();
     }
 
     @Test
     @DisplayName("Should return task by id")
     public void should_return_task_by_id() throws Exception {
-        when(taskService.getTaskById(task1.getId())).thenReturn(Optional.of(task1));
+        when(taskService.getTaskById(task1.getId())).thenReturn(java.util.Optional.of(task1));
 
-        mockMvc.perform(get("/tasks/{id}", task1.getId()))
+        mockMvc.perform(get("/tasks/{id}", task1.getId())
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(task1.getId()));
+                .andExpect(jsonPath("$.id").value(task1.getId()))
+                .andExpect(jsonPath("$.title").value(task1.getTitle()));
 
         verify(taskService, times(1)).getTaskById(task1.getId());
     }
@@ -87,11 +84,12 @@ public class TaskControllerTest {
     public void should_create_new_task() throws Exception {
         when(taskService.createTask(any(Task.class))).thenReturn(task1);
 
-        mockMvc.perform(post("/newTask")
+        mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(task1)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value(task1.getTitle()));
+                .andExpect(jsonPath("$.title").value(task1.getTitle()))
+                .andExpect(jsonPath("$.description").value(task1.getDescription()));
 
         verify(taskService, times(1)).createTask(any(Task.class));
     }
@@ -102,23 +100,25 @@ public class TaskControllerTest {
         Task updatedTask = new Task("Tarefa Atualizada", "Descrição Atualizada", LocalDate.of(2024, 6, 20), 25, TaskPriority.MEDIA);
         updatedTask.setId(task1.getId());
 
-        when(taskService.updateTask(task1.getId(), updatedTask)).thenReturn(Optional.of(updatedTask));
+        when(taskService.updateTask(eq(task1.getId()), any(Task.class))).thenReturn(java.util.Optional.of(updatedTask));
 
-        mockMvc.perform(put("api/edit/{id}", task1.getId())
+        mockMvc.perform(put("/tasks/{id}", task1.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedTask)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value(updatedTask.getTitle()));
+                .andExpect(jsonPath("$.title").value(updatedTask.getTitle()))
+                .andExpect(jsonPath("$.description").value(updatedTask.getDescription()));
 
-        verify(taskService, times(1)).updateTask(task1.getId(), updatedTask);
+        verify(taskService, times(1)).updateTask(eq(task1.getId()), any(Task.class));
     }
 
     @Test
     @DisplayName("Should delete a task")
     public void should_delete_task() throws Exception {
-        doNothing().when(taskService).deleteTask(task1.getId());
+        when(taskService.deleteTask(task1.getId())).thenReturn(true);
 
-        mockMvc.perform(delete("/delete/{id}", task1.getId()))
+        mockMvc.perform(delete("/tasks/{id}", task1.getId())
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(taskService, times(1)).deleteTask(task1.getId());
