@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import Column from './components/Column';
+import TaskForm from './components/TaskForm';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
+  const [openTasks, setOpenTasks] = useState<string[]>([]);
+  const [inProgressTasks, setInProgressTasks] = useState<string[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+
+  const addTask = (task: string) => {
+    setOpenTasks([...openTasks, task]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <TaskForm addTask={addTask} />
+      <div className="columns">
+        <Column title="Tarefas Abertas" tasks={openTasks} />
+        <Column title="Em Andamento" tasks={inProgressTasks} />
+        <Column title="Concluídas" tasks={completedTasks} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
