@@ -1,16 +1,19 @@
 import React from 'react';
+import { Task as TaskType } from '../interfaces/Task';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface TaskProps {
-  task: string;
+  task: TaskType;
+  onEdit: () => void;
 }
 
-const Task: React.FC<TaskProps> = ({ task }) => {
+const Task: React.FC<TaskProps> = ({ task, onEdit }) => {
   return (
     <div className="task">
-      <span>{task}</span>
-      <div className="task-icons">
-        <button className="icon-button">✏️</button>
-        <button className="icon-button">🗑️</button>
+      <span>{task.title}</span>
+      <div className="task-actions">
+        <EditOutlined onClick={onEdit} />
+        <DeleteOutlined />
       </div>
     </div>
   );

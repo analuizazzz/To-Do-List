@@ -1,12 +1,14 @@
 .App {
-  font-family: Arial, sans-serif;
-  padding: 20px;
+  text-align: center;
 }
 
 .App-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 20px;
+  background-color: #F4EFEC;
+  color: white;
 }
 
 .icon-buttons {
@@ -17,29 +19,17 @@
 .App-main {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  padding: 20px;
 }
 
 .task-board {
-  width: 45%;
+  background-color: #f1f1f1;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 8px;
+  width: 300px;
 }
 
-.task-board.open {
-  background-color: #f8d7da;
-}
-
-.task-board.closed {
-  background-color: #d4edda;
-}
-
-.task-board h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.tasks {
+.task-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -50,21 +40,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #d39eab;
-  border-radius: 5px;
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  cursor: grab;
 }
 
-.task-icons {
+.task-actions {
   display: flex;
-  gap: 5px;
+  gap: 10px;
 }
 
-.icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
+.task-board.open {
+  background-color: #f8d7da;
 }
 
-.icon-button span {
-  display: block;
+.task-board.closed {
+  background-color: #d4edda;
 }

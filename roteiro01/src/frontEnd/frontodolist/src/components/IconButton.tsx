@@ -1,16 +1,17 @@
 import React from 'react';
+import { Button } from 'antd';
 
 interface IconButtonProps {
   icon: string;
   label: string;
+  onClick?: () => void;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon, label }) => {
+const IconButton: React.FC<IconButtonProps> = ({ icon, label, onClick }) => {
   return (
-    <button className="icon-button">
-      <span>{icon}</span>
-      <span>{label}</span>
-    </button>
+    <Button type="text" icon={icon} onClick={onClick}>
+      {label}
+    </Button>
   );
 };
 
