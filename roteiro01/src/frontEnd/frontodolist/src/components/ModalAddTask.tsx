@@ -36,7 +36,7 @@ const ModalAddTask: React.FC<ModalAddTaskProps> = ({ resetEditing, task, add, vi
   return (
     <Modal
       title={add ? "Add Task" : "Edit Task"}
-      visible={visible}
+      open={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[

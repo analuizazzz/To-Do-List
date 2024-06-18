@@ -8,9 +8,10 @@ interface TaskBoardProps {
   tasks: TaskType[];
   droppableId: string;
   onEditTask: (task: TaskType) => void;
+  onDeleteTask: (task: TaskType) => void;
 }
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ title, tasks, droppableId, onEditTask }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({ title, tasks, droppableId, onEditTask, onDeleteTask }) => {
   return (
     <div className={`task-board ${title.toLowerCase()}`}>
       <h2>{title}</h2>
@@ -25,7 +26,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ title, tasks, droppableId, onEdit
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
-                    <Task task={task} onEdit={() => onEditTask(task)} />
+                    <Task task={task} onEdit={() => onEditTask(task)} onDelete={() => onDeleteTask(task)} />
                   </div>
                 )}
               </Draggable>
