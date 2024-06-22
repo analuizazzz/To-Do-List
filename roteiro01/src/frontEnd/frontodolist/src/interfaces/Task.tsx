@@ -2,10 +2,11 @@
 export interface Task {
     id?: number,
     title: string,
-    description: string,
     completed: boolean,
+    description: string,
     dueDate: string,
     dueDays: string,
     taskType: string,
     priority: string
+    status: string
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
 import Task from './Task';
 import { Task as TaskType } from '../interfaces/Task';
 
@@ -11,25 +11,27 @@ interface TaskBoardProps {
   onDeleteTask: (task: TaskType) => void;
 }
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ title, tasks, droppableId, onEditTask, onDeleteTask }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({
+  title = "Tasks", 
+  tasks = [], 
+  droppableId,
+  onEditTask,
+  onDeleteTask,
+}) => {
   return (
-    <div className={`task-board ${title.toLowerCase()}`}>
+    <div className="task-board">
       <h2>{title}</h2>
       <Droppable droppableId={droppableId}>
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps} className="task-list">
             {tasks.map((task, index) => (
-              <Draggable key={task.id!.toString()} draggableId={task.id!.toString()} index={index}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <Task task={task} onEdit={() => onEditTask(task)} onDelete={() => onDeleteTask(task)} />
-                  </div>
-                )}
-              </Draggable>
+              <Task 
+                key={task.id} 
+                task={task} 
+                index={index} 
+                onEdit={onEditTask} 
+                onDelete={onDeleteTask} 
+              />
             ))}
             {provided.placeholder}
           </div>

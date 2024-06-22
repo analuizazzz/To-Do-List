@@ -72,6 +72,8 @@ public class Task {
         }
     }
 
+    
+
     public Long getId() {
         return id;
     }
@@ -118,7 +120,7 @@ public class Task {
     }
 
     public void setDueDays(Integer dueDays) {
-        this.dueDays = dueDays;
+        this.dueDays = dueDays != null ? dueDays : 0; 
         this.taskType = determineTaskType(dueDate, dueDays);
     }
 

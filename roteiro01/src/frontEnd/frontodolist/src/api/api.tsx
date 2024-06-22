@@ -1,16 +1,25 @@
-import axios from 'axios';
 import { Task } from '../interfaces/Task';
 
-const API_URL = 'http://localhost:8080/tasks'; 
+import axios from 'axios';
 
-export const fetchTasks = () => axios.get<Task[]>(API_URL);
+const API_URL = 'http://localhost:8080/api';
 
-export const fetchTaskById = (id: number) => axios.get<Task>(`${API_URL}/${id}`);
+export const fetchTasks = () => {
+  return axios.get(`${API_URL}/tasks`);
+};
 
-export const createTask = (newTask: Task) => axios.post<Task>(API_URL, newTask);
+export const createTask = (task: Task) => {
+  return axios.post(`${API_URL}/tasks`, task);
+};
 
-export const updateTask = (id: number, updatedTask: Task) => axios.put<Task>(`${API_URL}/${id}`, updatedTask);
+export const updateTask = (id: number, task: Task) => {
+  return axios.put(`${API_URL}/tasks/${id}`, task);
+};
 
-export const deleteTask = (id: number) => axios.delete(`${API_URL}/${id}`);
+export const deleteTask = (id: number) => {
+  return axios.delete(`${API_URL}/tasks/${id}`);
+};
 
-export const deleteAllTasks = () => axios.delete(API_URL);
+export const deleteAllTasks = () => {
+  return axios.delete(`${API_URL}/tasks`);
+};

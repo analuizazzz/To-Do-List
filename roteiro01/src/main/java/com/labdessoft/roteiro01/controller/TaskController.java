@@ -20,11 +20,16 @@ public class TaskController {
     @GetMapping
     @Operation(summary = "Lista todas as tarefas da lista")
     public ResponseEntity<List<Task>> listAll() {
-        List<Task> taskList = taskService.listAllTasks();
-        if (taskList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            List<Task> taskList = taskService.listAllTasks();
+            if (taskList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(taskList, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

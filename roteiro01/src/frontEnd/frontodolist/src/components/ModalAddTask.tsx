@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, DatePicker, Select } from 'antd';
 import { Task } from '../interfaces/Task';
+import moment from 'moment';
 
 interface ModalAddTaskProps {
   resetEditing: () => void;
@@ -15,16 +16,32 @@ const ModalAddTask: React.FC<ModalAddTaskProps> = ({ resetEditing, task, add, vi
 
   useEffect(() => {
     if (task) {
-      form.setFieldsValue(task);
+      form.setFieldsValue({
+        ...task,
+        dueDate: task.dueDate ? moment(task.dueDate) : null,
+        status: task.dueDays ? `Atrasado ${task.dueDays} dias` : 'No prazo',
+      });
     }
   }, [task, form]);
 
   const handleOk = () => {
     form.validateFields().then(values => {
-      const newTask = task ? { ...task, ...values } : { ...values, id: Date.now(), completed: false };
+      const { dueDate, status, ...restValues } = values;
+
+      const formattedDueDate = dueDate ? moment(dueDate).format('YYYY-MM-DD') : null;
+
+      const newTask: Task = {
+        ...restValues,
+        dueDate: formattedDueDate,
+        taskType: restValues.taskType || "LIVRE",
+        priority: restValues.priority || "BAIXA",
+      };
+
       onSave(newTask);
       form.resetFields();
       resetEditing();
+      console.log(newTask);
+
     });
   };
 
@@ -36,7 +53,7 @@ const ModalAddTask: React.FC<ModalAddTaskProps> = ({ resetEditing, task, add, vi
   return (
     <Modal
       title={add ? "Add Task" : "Edit Task"}
-      open={visible}
+      visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[
@@ -51,7 +68,7 @@ const ModalAddTask: React.FC<ModalAddTaskProps> = ({ resetEditing, task, add, vi
       <Form
         form={form}
         layout="vertical"
-        initialValues={task || { title: '', description: '', dueDate: '', dueDays: '', taskType: '', priority: '' }}
+        initialValues={task || { title: '', description: '', dueDate: null, taskType: 'LIVRE', priority: 'BAIXA', status: '' }}
       >
         <Form.Item
           name="title"
@@ -70,21 +87,16 @@ const ModalAddTask: React.FC<ModalAddTaskProps> = ({ resetEditing, task, add, vi
           name="dueDate"
           label="Due Date"
         >
-          <DatePicker />
-        </Form.Item>
-        <Form.Item
-          name="dueDays"
-          label="Due Days"
-        >
-          <Input />
+          <DatePicker format="YYYY-MM-DD" />
         </Form.Item>
         <Form.Item
           name="taskType"
           label="Task Type"
         >
           <Select>
-            <Select.Option value="Type1">Type1</Select.Option>
-            <Select.Option value="Type2">Type2</Select.Option>
+            <Select.Option value="DATA">DATA</Select.Option>
+            <Select.Option value="PRAZO">PRAZO</Select.Option>
+            <Select.Option value="LIVRE">LIVRE</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item
@@ -92,10 +104,16 @@ const ModalAddTask: React.FC<ModalAddTaskProps> = ({ resetEditing, task, add, vi
           label="Priority"
         >
           <Select>
-            <Select.Option value="Low">Low</Select.Option>
-            <Select.Option value="Medium">Medium</Select.Option>
-            <Select.Option value="High">High</Select.Option>
+            <Select.Option value="BAIXA">Baixa</Select.Option>
+            <Select.Option value="MEDIA">Media</Select.Option>
+            <Select.Option value="ALTA">Alta</Select.Option>
           </Select>
+        </Form.Item>
+        <Form.Item
+          name="status"
+          label="Status"
+        >
+          <Input disabled />
         </Form.Item>
       </Form>
     </Modal>
