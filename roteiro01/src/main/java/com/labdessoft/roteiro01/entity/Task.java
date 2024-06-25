@@ -36,7 +36,7 @@ public class Task {
     private LocalDate dueDate;
 
     @Schema(description = "Prazo previsto de conclusão da tarefa (em dias).")
-    private Integer dueDays;
+    private Integer dueDays = 0;
 
     @Schema(description = "Tipo de tarefa (Data, Prazo, Livre).")
     @Enumerated(EnumType.STRING)
@@ -57,7 +57,7 @@ public class Task {
         this.description = description;
         this.completed = false;
         this.dueDate = dueDate;
-        this.dueDays = dueDays;
+        this.dueDays = setDueDays(dueDays);
         this.taskType = determineTaskType(dueDate, dueDays);
         this.priority = priority;
     }
@@ -65,7 +65,7 @@ public class Task {
     private TaskType determineTaskType(LocalDate dueDate, Integer dueDays) {
         if (dueDate != null) {
             return TaskType.DATA;
-        } else if (dueDays != null) {
+        } else if (dueDays > 0) {
             return TaskType.PRAZO;
         } else {
             return TaskType.LIVRE;
@@ -119,9 +119,10 @@ public class Task {
         return dueDays;
     }
 
-    public void setDueDays(Integer dueDays) {
+    public Integer setDueDays(Integer dueDays) {
         this.dueDays = dueDays != null ? dueDays : 0; 
         this.taskType = determineTaskType(dueDate, dueDays);
+        return dueDays;
     }
 
     public TaskType getTaskType() {

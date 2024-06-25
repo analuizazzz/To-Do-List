@@ -1,6 +1,6 @@
 import React from 'react';
 import { Task as TaskType } from '../interfaces/Task';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import TaskCard from './TaskCard';
 
 interface TaskProps {
   task: TaskType;
@@ -11,14 +11,7 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({ task, index, onEdit, onDelete }) => {
   return (
-    <div className="task">
-      <span>{task.title}</span>
-      <span>Status: {task.status}</span>
-      <div className="task-actions">
-        <EditOutlined onClick={() => onEdit(task)} />
-        <DeleteOutlined onClick={() => onDelete(task)} />
-      </div>
-    </div>
+    <TaskCard task={task} onEdit={onEdit} onDelete={onDelete} />
   );
 };
 

@@ -52,4 +52,9 @@ public class TaskService {
         }
         return false;
     }
+
+    public void deleteAllTasks() {
+        taskRepository.deleteAll();
+    }
+ 
 }

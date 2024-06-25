@@ -20,6 +20,16 @@ export const deleteTask = (id: number) => {
   return axios.delete(`${API_URL}/tasks/${id}`);
 };
 
-export const deleteAllTasks = () => {
+export const deleteAllTasks = async () => {
   return axios.delete(`${API_URL}/tasks`);
+};
+
+export const fetchTaskById = async (taskId: number) => {
+  const url = `${API_URL}/tasks/${taskId}`;
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };

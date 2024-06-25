@@ -21,7 +21,7 @@ public class TaskController {
     @Operation(summary = "Lista todas as tarefas da lista")
     public ResponseEntity<List<Task>> listAll() {
         try {
-            List<Task> taskList = taskService.listAllTasks();
+            List<Task> taskList = (List<Task>) taskService.listAllTasks();
             if (taskList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -65,5 +65,12 @@ public class TaskController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping
+    @Operation(summary = "Deletar Todas as tarefas")
+    public ResponseEntity<Void> deleteAllTasks() {
+        taskService.deleteAllTasks();
+        return ResponseEntity.noContent().build();
     }
 }
